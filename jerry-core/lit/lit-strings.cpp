@@ -609,15 +609,19 @@ lit_utf8_string_calc_hash_last_bytes (const lit_utf8_byte_t *utf8_buf_p, /**< ch
 {
   JERRY_ASSERT (utf8_buf_p != NULL || utf8_buf_size == 0);
 
-  lit_utf8_byte_t byte1 = (utf8_buf_size > 0) ? utf8_buf_p[utf8_buf_size - 1] : (lit_utf8_byte_t) 0;
-  lit_utf8_byte_t byte2 = (utf8_buf_size > 1) ? utf8_buf_p[utf8_buf_size - 2] : (lit_utf8_byte_t) 0;
+  uint32_t hash = 5381;
+  const uint32_t m = 33;
+  const uint32_t shift = 16;
 
-  uint32_t t1 = (uint32_t) byte1 + (uint32_t) byte2;
-  uint32_t t2 = t1 * 0x24418b66;
-  uint32_t t3 = (t2 >> 16) ^ (t2 & 0xffffu);
-  uint32_t t4 = (t3 >> 8) ^ (t3 & 0xffu);
+  for (uint32_t i = 0; i < utf8_buf_size; i++)
+  {
+    hash = m * hash + utf8_buf_p[i];
+  }
 
-  return (lit_string_hash_t) t4;
+  uint32_t h1 = hash >> shift;
+  hash = hash ^ h1;
+
+  return (lit_string_hash_t) hash;
 } /* lit_utf8_string_calc_hash_last_bytes */
 
 /**

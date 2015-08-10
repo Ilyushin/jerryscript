@@ -470,33 +470,13 @@ ecma_new_ecma_string_from_uint32 (uint32_t uint32_number) /**< UInt32-represente
   string_desc_p->is_stack_var = false;
   string_desc_p->container = ECMA_STRING_CONTAINER_UINT32_IN_DESC;
 
-  uint32_t last_two_digits = uint32_number % 100;
-  uint32_t digit_pl = last_two_digits / 10;
-  uint32_t digit_l = last_two_digits % 10;
-
-  FIXME (/* Use digit to char conversion routine */);
-  const lit_utf8_byte_t digits[10] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-  const bool is_one_char_or_more = (uint32_number >= 10);
-  const lit_utf8_byte_t last_chars[LIT_STRING_HASH_LAST_BYTES_COUNT] =
-  {
-    is_one_char_or_more ? digits[digit_pl] : digits[digit_l],
-    is_one_char_or_more ? digits[digit_l] : (lit_utf8_byte_t) '\0'
-  };
-
-  /* Only last two chars are really used for hash calculation */
-  string_desc_p->hash = lit_utf8_string_calc_hash_last_bytes (last_chars,
-                                                              is_one_char_or_more ? 2 : 1);
-
-#ifndef JERRY_NDEBUG
   lit_utf8_byte_t byte_buf[ECMA_MAX_CHARS_IN_STRINGIFIED_UINT32];
   ssize_t bytes_copied = ecma_uint32_to_utf8_string (uint32_number,
                                                      byte_buf,
                                                      ECMA_MAX_CHARS_IN_STRINGIFIED_UINT32);
-  JERRY_ASSERT ((ssize_t) ((lit_utf8_size_t) bytes_copied) == bytes_copied);
 
-  JERRY_ASSERT (string_desc_p->hash == lit_utf8_string_calc_hash_last_bytes (byte_buf,
-                                                                             (lit_utf8_size_t) bytes_copied));
-#endif /* !JERRY_NDEBUG */
+  string_desc_p->hash = lit_utf8_string_calc_hash_last_bytes (byte_buf,
+                                                             (lit_utf8_size_t) bytes_copied);
 
   string_desc_p->u.common_field = 0;
   string_desc_p->u.uint32_number = uint32_number;
