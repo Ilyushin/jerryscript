@@ -17,6 +17,7 @@
 #include "bytecode-data.h"
 #include "pretty-printer.h"
 #include "array-list.h"
+#include "scopes-tree.h"
 
 static bytecode_data_t bytecode_data;
 static scopes_tree current_scope;
@@ -31,6 +32,13 @@ serializer_get_op_meta (vm_instr_counter_t oc)
 {
   JERRY_ASSERT (current_scope);
   return scopes_tree_op_meta (current_scope, oc);
+}
+
+op_meta
+serializer_get_var_decl (vm_instr_counter_t oc)
+{
+  JERRY_ASSERT (current_scope);
+  return scopes_tree_var_decl (current_scope, oc);
 }
 
 /**
@@ -116,6 +124,11 @@ serializer_dump_subscope (scopes_tree tree) /**< scope to dump */
     }
     scopes_tree_add_op_meta (current_scope, *om);
   }
+  for (vm_instr_counter_t var_decl_pos = 0; var_decl_pos < tree->var_decls_num; var_decl_pos++)
+  {
+    op_meta *om = (op_meta *) linked_list_element (tree->var_decls, var_decl_pos);
+    scopes_tree_add_op_meta (current_scope, *om);
+  }
   for (uint8_t child_id = 0; child_id < tree->t.children_num; child_id++)
   {
     serializer_dump_subscope (*(scopes_tree *) linked_list_element (tree->t.children, child_id));
@@ -180,10 +193,24 @@ serializer_dump_op_meta (op_meta op)
 #endif
 }
 
+void
+serializer_dump_var_decl (op_meta op)
+{
+  JERRY_ASSERT (scopes_tree_instrs_num (current_scope) + current_scope->var_decls_num < MAX_OPCODES);
+
+  scopes_tree_add_var_decl (current_scope, op);
+}
+
 vm_instr_counter_t
 serializer_get_current_instr_counter (void)
 {
   return scopes_tree_instrs_num (current_scope);
+}
+
+vm_instr_counter_t
+serializer_get_current_var_decls_counter (void)
+{
+  return scopes_tree_var_decls_num (current_scope);
 }
 
 vm_instr_counter_t

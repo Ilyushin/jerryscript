@@ -44,6 +44,8 @@ typedef struct
   tree_header t;
   linked_list instrs;
   vm_instr_counter_t instrs_num;
+  linked_list var_decls;
+  uint8_t var_decls_num;
   unsigned strict_mode:1;
 } scopes_tree_int;
 
@@ -52,10 +54,13 @@ typedef scopes_tree_int * scopes_tree;
 scopes_tree scopes_tree_init (scopes_tree);
 void scopes_tree_free (scopes_tree);
 vm_instr_counter_t scopes_tree_instrs_num (scopes_tree);
+vm_instr_counter_t scopes_tree_var_decls_num (scopes_tree);
 void scopes_tree_add_op_meta (scopes_tree, op_meta);
+void scopes_tree_add_var_decl (scopes_tree, op_meta);
 void scopes_tree_set_op_meta (scopes_tree, vm_instr_counter_t, op_meta);
 void scopes_tree_set_instrs_num (scopes_tree, vm_instr_counter_t);
 op_meta scopes_tree_op_meta (scopes_tree, vm_instr_counter_t);
+op_meta scopes_tree_var_decl (scopes_tree, vm_instr_counter_t);
 size_t scopes_tree_count_literals_in_blocks (scopes_tree);
 vm_instr_counter_t scopes_tree_count_instructions (scopes_tree);
 vm_instr_t *scopes_tree_raw_data (scopes_tree, uint8_t *, size_t, lit_id_hash_table *);

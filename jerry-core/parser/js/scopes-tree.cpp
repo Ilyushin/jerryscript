@@ -52,11 +52,25 @@ scopes_tree_instrs_num (scopes_tree t)
   return t->instrs_num;
 }
 
+vm_instr_counter_t
+scopes_tree_var_decls_num (scopes_tree t)
+{
+  assert_tree (t);
+  return t->var_decls_num;
+}
+
 void
 scopes_tree_add_op_meta (scopes_tree tree, op_meta op)
 {
   assert_tree (tree);
   linked_list_set_element (tree->instrs, tree->instrs_num++, &op);
+}
+
+void
+scopes_tree_add_var_decl (scopes_tree tree, op_meta op)
+{
+  assert_tree (tree);
+  linked_list_set_element (tree->var_decls, tree->var_decls_num++, &op);
 }
 
 void
@@ -83,11 +97,19 @@ scopes_tree_op_meta (scopes_tree tree, vm_instr_counter_t oc)
   return *(op_meta *) linked_list_element (tree->instrs, oc);
 }
 
+op_meta
+scopes_tree_var_decl (scopes_tree tree, vm_instr_counter_t oc)
+{
+  assert_tree (tree);
+  JERRY_ASSERT (oc < tree->var_decls_num);
+  return *(op_meta *) linked_list_element (tree->var_decls, oc);
+}
+
 vm_instr_counter_t
 scopes_tree_count_instructions (scopes_tree t)
 {
   assert_tree (t);
-  vm_instr_counter_t res = t->instrs_num;
+  vm_instr_counter_t res = (vm_instr_counter_t) (t->instrs_num + t->var_decls_num);
   for (uint8_t i = 0; i < t->t.children_num; i++)
   {
     res = (vm_instr_counter_t) (
@@ -213,16 +235,16 @@ insert_uids_to_lit_id_map (op_meta *om, uint16_t mask)
 }
 
 static op_meta *
-extract_op_meta (scopes_tree tree, vm_instr_counter_t instr_pos)
+extract_op_meta (linked_list instr_list, vm_instr_counter_t instr_pos)
 {
-  return (op_meta *) linked_list_element (tree->instrs, instr_pos);
+  return (op_meta *) linked_list_element (instr_list, instr_pos);
 }
 
 static vm_instr_t
-generate_instr (scopes_tree tree, vm_instr_counter_t instr_pos, lit_id_hash_table *lit_ids)
+generate_instr (linked_list instr_list, vm_instr_counter_t instr_pos, lit_id_hash_table *lit_ids)
 {
   start_new_block_if_necessary ();
-  op_meta *om = extract_op_meta (tree, instr_pos);
+  op_meta *om = extract_op_meta (instr_list, instr_pos);
   /* Now we should change uids of instructions.
      Since different instructions has different literals/tmps in different places,
      we should change only them.
@@ -362,11 +384,10 @@ generate_instr (scopes_tree tree, vm_instr_counter_t instr_pos, lit_id_hash_tabl
 }
 
 static idx_t
-count_new_literals_in_instr (scopes_tree tree, vm_instr_counter_t instr_pos)
+count_new_literals_in_instr (op_meta *om)
 {
   start_new_block_if_necessary ();
   idx_t current_uid = next_uid;
-  op_meta *om = extract_op_meta (tree, instr_pos);
   switch (om->op.op_idx)
   {
     case VM_OP_PROP_GETTER:
@@ -519,7 +540,7 @@ scopes_tree_count_literals_in_blocks (scopes_tree tree)
   bool header = true;
   for (instr_pos = 0; instr_pos < tree->instrs_num; instr_pos++)
   {
-    op_meta *om = extract_op_meta (tree, instr_pos);
+    op_meta *om = extract_op_meta (tree->instrs, instr_pos);
     if (om->op.op_idx != VM_OP_VAR_DECL
         && om->op.op_idx != VM_OP_META && !header)
     {
@@ -529,7 +550,12 @@ scopes_tree_count_literals_in_blocks (scopes_tree tree)
     {
       header = false;
     }
-    result += count_new_literals_in_instr (tree, instr_pos);
+    result += count_new_literals_in_instr (om);
+  }
+  for (vm_instr_counter_t var_decl_pos = 0; var_decl_pos < tree->var_decls_num; var_decl_pos++)
+  {
+    op_meta *om = extract_op_meta (tree->var_decls, var_decl_pos);
+    result += count_new_literals_in_instr (om);
   }
   for (uint8_t child_id = 0; child_id < tree->t.children_num; child_id++)
   {
@@ -537,7 +563,8 @@ scopes_tree_count_literals_in_blocks (scopes_tree tree)
   }
   for (; instr_pos < tree->instrs_num; instr_pos++)
   {
-    result += count_new_literals_in_instr (tree, instr_pos);
+    op_meta *om = extract_op_meta (tree->instrs, instr_pos);
+    result += count_new_literals_in_instr (om);
   }
 
   return result;
@@ -566,7 +593,7 @@ merge_subscopes (scopes_tree tree, vm_instr_t *data, lit_id_hash_table *lit_ids)
   bool header = true;
   for (instr_pos = 0; instr_pos < tree->instrs_num; instr_pos++)
   {
-    op_meta *om = extract_op_meta (tree, instr_pos);
+    op_meta *om = extract_op_meta (tree->instrs, instr_pos);
     if (om->op.op_idx != VM_OP_VAR_DECL
         && om->op.op_idx != VM_OP_META && !header)
     {
@@ -576,17 +603,25 @@ merge_subscopes (scopes_tree tree, vm_instr_t *data, lit_id_hash_table *lit_ids)
     {
       header = false;
     }
-    data[global_oc] = generate_instr (tree, instr_pos, lit_ids);
+    data[global_oc] = generate_instr (tree->instrs, instr_pos, lit_ids);
     global_oc++;
   }
+
+  for (vm_instr_counter_t var_decl_pos = 0; var_decl_pos < tree->var_decls_num; var_decl_pos++)
+  {
+    data[global_oc] = generate_instr (tree->var_decls, var_decl_pos, lit_ids);
+    global_oc++;
+  }
+
   for (uint8_t child_id = 0; child_id < tree->t.children_num; child_id++)
   {
     merge_subscopes (*(scopes_tree *) linked_list_element (tree->t.children, child_id),
                      data, lit_ids);
   }
+
   for (; instr_pos < tree->instrs_num; instr_pos++)
   {
-    data[global_oc] = generate_instr (tree, instr_pos, lit_ids);
+    data[global_oc] = generate_instr (tree->instrs, instr_pos, lit_ids);
     global_oc++;
   }
 }
@@ -667,6 +702,8 @@ scopes_tree_init (scopes_tree parent)
   tree->instrs_num = 0;
   tree->strict_mode = 0;
   tree->instrs = linked_list_init (sizeof (op_meta));
+  tree->var_decls_num = 0;
+  tree->var_decls = linked_list_init (sizeof (op_meta));
   return tree;
 }
 
@@ -683,5 +720,6 @@ scopes_tree_free (scopes_tree tree)
     linked_list_free (tree->t.children);
   }
   linked_list_free (tree->instrs);
+  linked_list_free (tree->var_decls);
   jsp_mm_free (tree);
 }

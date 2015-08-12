@@ -1812,6 +1812,15 @@ parse_variable_declaration (void)
   current_token_must_be (TOK_NAME);
   const operand name = literal_operand (token_data_as_lit_cp ());
 
+  if (!dumper_variable_declaration_exists_new (token_data_as_lit_cp ()))
+  {
+    jsp_early_error_check_for_eval_and_arguments_in_strict_mode (literal_operand (token_data_as_lit_cp ()),
+                                                                 is_strict_mode (),
+                                                                 tok.loc);
+
+    dump_variable_declaration_new (token_data_as_lit_cp ());
+  }
+
   skip_newlines ();
   if (token_is (TOK_EQ))
   {
@@ -2885,55 +2894,6 @@ parse_source_element (void)
   }
 }
 
-/**
- * Skip function's optional name and parentheses
- *
- * @return: true, if skipped successfully
- *          false, if open parentheses wasn't found (this means that keyword 'function' is used as
- *                                                   a property name)
- */
-static bool
-skip_optional_name_and_parens (void)
-{
-  if (token_is (TOK_NAME))
-  {
-    token_after_newlines_must_be (TOK_OPEN_PAREN);
-  }
-
-  if (token_is (TOK_OPEN_PAREN))
-  {
-    skip_newlines ();
-  }
-  else
-  {
-    return false;
-  }
-
-  while (!token_is (TOK_CLOSE_PAREN))
-  {
-    skip_newlines ();
-  }
-
-  return true;
-} /* skip_optional_name_and_parens */
-
-static void
-skip_function (void)
-{
-  skip_newlines ();
-  if (skip_optional_name_and_parens ())
-  {
-    skip_newlines ();
-    jsp_skip_braces (TOK_OPEN_BRACE);
-  }
-}
-
-static bool
-var_declared (lit_cpointer_t var_cp)
-{
-  return dumper_variable_declaration_exists (var_cp);
-}
-
 static void
 preparse_scope (bool is_global)
 {
@@ -3019,124 +2979,6 @@ preparse_scope (bool is_global)
 
   if (lit_utf8_iterator_pos_cmp (start_loc, tok.loc) != 0)
   {
-    lexer_seek (start_loc);
-    skip_newlines ();
-
-    bool is_in_var_declaration_list = false;
-
-    size_t nesting_level = 0;
-    while (nesting_level > 0 || !token_is (end_tt))
-    {
-      /*
-       * FIXME:
-       *       Remove preparse_scope; move variable declaration search to main pass of parser.
-       *       When byte-code and scope storages would be introduced, move variable declarations
-       *       from byte-code to scope descriptor.
-       */
-      if (token_is (TOK_NAME))
-      {
-        if (is_in_var_declaration_list)
-        {
-          if (!var_declared (token_data_as_lit_cp ()))
-          {
-            jsp_early_error_check_for_eval_and_arguments_in_strict_mode (literal_operand (token_data_as_lit_cp ()),
-                                                                         is_strict_mode (),
-                                                                         tok.loc);
-            dump_variable_declaration (token_data_as_lit_cp ());
-          }
-        }
-
-        skip_newlines ();
-
-        if (!token_is (TOK_COMMA)
-            && !token_is (TOK_EQ))
-        {
-          is_in_var_declaration_list = false;
-        }
-      }
-      else if (is_in_var_declaration_list)
-      {
-        if (token_is (TOK_EQ))
-        {
-          skip_newlines ();
-
-          while (!token_is (end_tt)
-                 && !token_is (TOK_COMMA)
-                 && !token_is (TOK_SEMICOLON))
-          {
-            if (is_keyword (KW_FUNCTION))
-            {
-              skip_function ();
-            }
-            else if (token_is (TOK_OPEN_BRACE))
-            {
-              jsp_skip_braces (TOK_OPEN_BRACE);
-            }
-            else if (token_is (TOK_OPEN_SQUARE))
-            {
-              jsp_skip_braces (TOK_OPEN_SQUARE);
-            }
-            else if (token_is (TOK_OPEN_PAREN))
-            {
-              jsp_skip_braces (TOK_OPEN_PAREN);
-            }
-            else if (token_is (TOK_KEYWORD))
-            {
-              if (is_keyword (KW_VAR))
-              {
-                is_in_var_declaration_list = false;
-              }
-              break;
-            }
-            else if (token_is (TOK_CLOSE_BRACE))
-            {
-              /* the '}' would be handled during next iteration, reducing nesting level counter */
-              is_in_var_declaration_list = false;
-
-              break;
-            }
-
-            skip_token ();
-          }
-        }
-        else if (token_is (TOK_COMMA))
-        {
-          skip_newlines ();
-        }
-        else
-        {
-          is_in_var_declaration_list = false;
-
-          skip_newlines ();
-        }
-      }
-      else
-      {
-        if (token_is (TOK_OPEN_BRACE))
-        {
-          nesting_level++;
-        }
-        else if (token_is (TOK_CLOSE_BRACE))
-        {
-          nesting_level--;
-        }
-        else if (token_is (TOK_OPEN_SQUARE))
-        {
-          jsp_skip_braces (TOK_OPEN_SQUARE);
-        }
-        else if (is_keyword (KW_VAR))
-        {
-          is_in_var_declaration_list = true;
-        }
-        else if (is_keyword (KW_FUNCTION))
-        {
-          skip_function ();
-        }
-
-        skip_newlines ();
-      }
-    }
-
     lexer_seek (start_loc);
   }
   else

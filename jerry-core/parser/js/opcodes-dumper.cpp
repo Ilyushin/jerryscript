@@ -2533,6 +2533,28 @@ dump_variable_declaration (lit_cpointer_t lit_id)
   serializer_dump_op_meta (create_op_meta_100 (instr, lit_id));
 }
 
+bool
+dumper_variable_declaration_exists_new (lit_cpointer_t lit_id)
+{
+  for (vm_instr_counter_t oc = (vm_instr_counter_t) (0);
+       oc < (vm_instr_counter_t) serializer_get_current_var_decls_counter (); oc++)
+  {
+    const op_meta var_decl_op_meta = serializer_get_var_decl (oc);
+    if (var_decl_op_meta.lit_id[0].packed_value == lit_id.packed_value)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+void
+dump_variable_declaration_new (lit_cpointer_t lit_id)
+{
+  const vm_instr_t instr = getop_var_decl (LITERAL_TO_REWRITE);
+  serializer_dump_var_decl (create_op_meta_100 (instr, lit_id));
+}
+
 /**
  * Dump template of 'meta' instruction for scope's code flags.
  *

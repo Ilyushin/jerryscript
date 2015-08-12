@@ -226,6 +226,8 @@ void dump_throw (operand);
 
 bool dumper_variable_declaration_exists (lit_cpointer_t);
 void dump_variable_declaration (lit_cpointer_t);
+bool dumper_variable_declaration_exists_new (lit_cpointer_t);
+void dump_variable_declaration_new (lit_cpointer_t);
 
 vm_instr_counter_t dump_scope_code_flags_for_rewrite (void);
 void rewrite_scope_code_flags (vm_instr_counter_t scope_code_flags_oc,
