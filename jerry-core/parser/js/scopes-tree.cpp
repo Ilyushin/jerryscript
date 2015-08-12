@@ -673,6 +673,20 @@ scopes_tree_set_strict_mode (scopes_tree tree, bool strict_mode)
   tree->strict_mode = strict_mode ? 1 : 0;
 }
 
+void
+scopes_tree_set_arguments_used (scopes_tree tree)
+{
+  assert_tree (tree);
+  tree->ref_arguments = 1;
+}
+
+void
+scopes_tree_set_eval_used (scopes_tree tree)
+{
+  assert_tree (tree);
+  tree->ref_eval = 1;
+}
+
 bool
 scopes_tree_strict_mode (scopes_tree tree)
 {
@@ -701,6 +715,8 @@ scopes_tree_init (scopes_tree parent)
   }
   tree->instrs_num = 0;
   tree->strict_mode = 0;
+  tree->ref_eval = 0;
+  tree->ref_arguments = 0;
   tree->instrs = linked_list_init (sizeof (op_meta));
   tree->var_decls_num = 0;
   tree->var_decls = linked_list_init (sizeof (op_meta));

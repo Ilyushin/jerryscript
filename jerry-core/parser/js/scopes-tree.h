@@ -46,7 +46,9 @@ typedef struct
   vm_instr_counter_t instrs_num;
   linked_list var_decls;
   uint8_t var_decls_num;
-  unsigned strict_mode:1;
+  unsigned strict_mode: 1;
+  unsigned ref_arguments: 1;
+  unsigned ref_eval: 1;
 } scopes_tree_int;
 
 typedef scopes_tree_int * scopes_tree;
@@ -65,6 +67,8 @@ size_t scopes_tree_count_literals_in_blocks (scopes_tree);
 vm_instr_counter_t scopes_tree_count_instructions (scopes_tree);
 vm_instr_t *scopes_tree_raw_data (scopes_tree, uint8_t *, size_t, lit_id_hash_table *);
 void scopes_tree_set_strict_mode (scopes_tree, bool);
+void scopes_tree_set_arguments_used (scopes_tree);
+void scopes_tree_set_eval_used (scopes_tree);
 bool scopes_tree_strict_mode (scopes_tree);
 
 #endif /* SCOPES_TREE_H */

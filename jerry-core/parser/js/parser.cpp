@@ -63,7 +63,7 @@ STATIC_STACK (scopes, scopes_tree)
 static operand parse_expression (bool, jsp_eval_ret_store_t);
 static void parse_statement (jsp_label_t *outermost_stmt_label_p);
 static operand parse_assignment_expression (bool);
-static void parse_source_element_list (bool);
+static void parse_source_element_list ();
 static operand parse_argument_list (varg_list_type, operand, operand *);
 
 static bool
@@ -402,7 +402,7 @@ parse_property_assignment (void)
 
     jsp_label_t *masked_label_set_p = jsp_label_mask_set ();
 
-    parse_source_element_list (false);
+    parse_source_element_list ();
 
     jsp_label_restore_set (masked_label_set_p);
 
@@ -672,7 +672,7 @@ parse_function_declaration (void)
   bool was_in_function = inside_function;
   inside_function = true;
 
-  parse_source_element_list (false);
+  parse_source_element_list ();
 
   next_token_must_be (TOK_CLOSE_BRACE);
 
@@ -736,7 +736,7 @@ parse_function_expression (void)
 
   jsp_label_t *masked_label_set_p = jsp_label_mask_set ();
 
-  parse_source_element_list (false);
+  parse_source_element_list ();
 
   jsp_label_restore_set (masked_label_set_p);
 
@@ -829,7 +829,18 @@ parse_primary_expression (void)
     case TOK_NUMBER:
     case TOK_REGEXP:
     case TOK_STRING: return parse_literal ();
-    case TOK_NAME: return literal_operand (token_data_as_lit_cp ());
+    case TOK_NAME:
+    {
+      if (lit_literal_equal_type_cstr (lit_get_literal_by_cp (token_data_as_lit_cp ()), "arguments"))
+      {
+        scopes_tree_set_arguments_used (STACK_TOP (scopes));
+      }
+      if (lit_literal_equal_type_cstr (lit_get_literal_by_cp (token_data_as_lit_cp ()), "eval"))
+      {
+        scopes_tree_set_eval_used (STACK_TOP (scopes));
+      }
+      return literal_operand (token_data_as_lit_cp ());
+    }
     case TOK_OPEN_SQUARE: return parse_array_literal ();
     case TOK_OPEN_BRACE: return parse_object_literal ();
     case TOK_OPEN_PAREN:
@@ -2895,16 +2906,9 @@ parse_source_element (void)
 }
 
 static void
-preparse_scope (bool is_global)
+preparse_scope ()
 {
   const locus start_loc = tok.loc;
-  const token_type end_tt = is_global ? TOK_EOF : TOK_CLOSE_BRACE;
-
-  vm_instr_counter_t scope_code_flags_oc = dump_scope_code_flags_for_rewrite ();
-
-  bool is_use_strict = false;
-  bool is_ref_arguments_identifier = false;
-  bool is_ref_eval_identifier = false;
 
   /*
    * Check Directive Prologue for Use Strict directive (see ECMA-262 5.1 section 14.1)
@@ -2914,7 +2918,7 @@ preparse_scope (bool is_global)
     if (lit_literal_equal_type_cstr (lit_get_literal_by_cp (token_data_as_lit_cp ()), "use strict")
         && lexer_is_no_escape_sequences_in_token_string (tok))
     {
-      is_use_strict = true;
+      scopes_tree_set_strict_mode (STACK_TOP (scopes), true);
       break;
     }
 
@@ -2926,53 +2930,6 @@ preparse_scope (bool is_global)
     }
   }
 
-  size_t nesting_level = 0;
-  while (nesting_level > 0 || !token_is (end_tt))
-  {
-    if (token_is (TOK_OPEN_BRACE))
-    {
-      nesting_level++;
-    }
-    else if (token_is (TOK_CLOSE_BRACE))
-    {
-      nesting_level--;
-    }
-    else if (token_is (TOK_NAME))
-    {
-      if (lit_literal_equal_type_cstr (lit_get_literal_by_cp (token_data_as_lit_cp ()), "arguments"))
-      {
-        is_ref_arguments_identifier = true;
-      }
-      else if (lit_literal_equal_type_cstr (lit_get_literal_by_cp (token_data_as_lit_cp ()), "eval"))
-      {
-        is_ref_eval_identifier = true;
-      }
-    }
-
-    skip_newlines ();
-  }
-
-  opcode_scope_code_flags_t scope_flags = OPCODE_SCOPE_CODE_FLAGS__EMPTY;
-
-  if (is_use_strict)
-  {
-    scopes_tree_set_strict_mode (STACK_TOP (scopes), true);
-
-    scope_flags = (opcode_scope_code_flags_t) (scope_flags | OPCODE_SCOPE_CODE_FLAGS_STRICT);
-  }
-
-  if (!is_ref_arguments_identifier)
-  {
-    scope_flags = (opcode_scope_code_flags_t) (scope_flags | OPCODE_SCOPE_CODE_FLAGS_NOT_REF_ARGUMENTS_IDENTIFIER);
-  }
-
-  if (!is_ref_eval_identifier)
-  {
-    scope_flags = (opcode_scope_code_flags_t) (scope_flags | OPCODE_SCOPE_CODE_FLAGS_NOT_REF_EVAL_IDENTIFIER);
-  }
-
-  rewrite_scope_code_flags (scope_code_flags_oc, scope_flags);
-
   lexer_set_strict_mode (scopes_tree_strict_mode (STACK_TOP (scopes)));
 
   dump_reg_var_decl_for_rewrite ();
@@ -2983,8 +2940,6 @@ preparse_scope (bool is_global)
   }
   else
   {
-    JERRY_ASSERT (token_is (end_tt));
-
     lexer_save_token (tok);
   }
 }
@@ -2997,10 +2952,13 @@ preparse_scope (bool is_global)
  *   ;
  */
 static void
-parse_source_element_list (bool is_global) /**< flag indicating if we are parsing the global scope */
+parse_source_element_list ()
 {
   dumper_new_scope ();
-  preparse_scope (is_global);
+
+  vm_instr_counter_t scope_code_flags_oc = dump_scope_code_flags_for_rewrite ();
+
+  preparse_scope ();
 
   if (inside_eval
       && !inside_function)
@@ -3015,6 +2973,26 @@ parse_source_element_list (bool is_global) /**< flag indicating if we are parsin
     skip_newlines ();
   }
   lexer_save_token (tok);
+
+  opcode_scope_code_flags_t scope_flags = OPCODE_SCOPE_CODE_FLAGS__EMPTY;
+
+  scopes_tree fe_scope_tree = STACK_TOP (scopes);
+  if (fe_scope_tree->strict_mode)
+  {
+    scope_flags = (opcode_scope_code_flags_t) (scope_flags | OPCODE_SCOPE_CODE_FLAGS_STRICT);
+  }
+
+  if (!fe_scope_tree->ref_arguments)
+  {
+    scope_flags = (opcode_scope_code_flags_t) (scope_flags | OPCODE_SCOPE_CODE_FLAGS_NOT_REF_ARGUMENTS_IDENTIFIER);
+  }
+
+  if (!fe_scope_tree->ref_eval)
+  {
+    scope_flags = (opcode_scope_code_flags_t) (scope_flags | OPCODE_SCOPE_CODE_FLAGS_NOT_REF_EVAL_IDENTIFIER);
+  }
+  rewrite_scope_code_flags (scope_code_flags_oc, scope_flags);
+
   rewrite_reg_var_decl ();
   dumper_finish_scope ();
 } /* parse_source_element_list */
@@ -3076,7 +3054,7 @@ parser_parse_program (const jerry_api_char_t *source_p, /**< source code buffer 
     lexer_set_strict_mode (scopes_tree_strict_mode (STACK_TOP (scopes)));
 
     skip_newlines ();
-    parse_source_element_list (true);
+    parse_source_element_list ();
 
     skip_newlines ();
     JERRY_ASSERT (token_is (TOK_EOF));
