@@ -473,13 +473,15 @@ vm_run_scope_t *run_scope_p) /**< current run scope,
 #endif /* MEM_STATS */
 
 			//ilyushin
-			clock_t begin = clock();
+			clock_t t = clock();
 			//ilyushin
 
 			completion = __opfuncs[curr->op_idx](*curr, frame_ctx_p);
+
 			//ilyushin
-			printf("%5u,%5u,%5u\n", (uint32_t) curr->op_idx,
-					(uint32_t) frame_ctx_p->pos, (double) (clock() - begin));
+			t = clock()-t;
+			printf("%5u,%5u,%f\n", (uint32_t) curr->op_idx,
+					(uint32_t) frame_ctx_p->pos, ((float)t)/CLOCKS_PER_SEC);
 			//ilyushin
 
 #ifdef CONFIG_VM_RUN_GC_AFTER_EACH_OPCODE
