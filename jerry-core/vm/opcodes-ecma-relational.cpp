@@ -31,7 +31,9 @@ opfunc_less_than (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.less_than.dst;
   const idx_t left_var_idx = instr.data.less_than.var_left;
   const idx_t right_var_idx = instr.data.less_than.var_right;
-
+//ilyushin
+    	printf("less_than");
+  	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
   ECMA_TRY_CATCH (left_value, get_variable_value (frame_ctx_p, left_var_idx, false), ret_value);
@@ -79,7 +81,9 @@ opfunc_greater_than (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.greater_than.dst;
   const idx_t left_var_idx = instr.data.greater_than.var_left;
   const idx_t right_var_idx = instr.data.greater_than.var_right;
-
+//ilyushin
+    	printf("greater_than");
+  	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
   ECMA_TRY_CATCH (left_value, get_variable_value (frame_ctx_p, left_var_idx, false), ret_value);
@@ -127,7 +131,9 @@ opfunc_less_or_equal_than (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.less_or_equal_than.dst;
   const idx_t left_var_idx = instr.data.less_or_equal_than.var_left;
   const idx_t right_var_idx = instr.data.less_or_equal_than.var_right;
-
+//ilyushin
+    	printf("less_or_equal_than");
+  	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
   ECMA_TRY_CATCH (left_value, get_variable_value (frame_ctx_p, left_var_idx, false), ret_value);
@@ -182,7 +188,9 @@ opfunc_greater_or_equal_than (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.greater_or_equal_than.dst;
   const idx_t left_var_idx = instr.data.greater_or_equal_than.var_left;
   const idx_t right_var_idx = instr.data.greater_or_equal_than.var_right;
-
+//ilyushin
+    	printf("greater_or_equal_than");
+  	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
   ECMA_TRY_CATCH (left_value, get_variable_value (frame_ctx_p, left_var_idx, false), ret_value);
@@ -237,7 +245,9 @@ opfunc_instanceof (vm_instr_t instr __attr_unused___, /**< instruction */
   const idx_t dst_idx = instr.data.instanceof.dst;
   const idx_t left_var_idx = instr.data.instanceof.var_left;
   const idx_t right_var_idx = instr.data.instanceof.var_right;
-
+//ilyushin
+    	printf("instanceof");
+  	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
   ECMA_TRY_CATCH (left_value, get_variable_value (frame_ctx_p, left_var_idx, false), ret_value);
@@ -283,7 +293,9 @@ opfunc_in (vm_instr_t instr __attr_unused___, /**< instruction */
   const idx_t dst_idx = instr.data.in.dst;
   const idx_t left_var_idx = instr.data.in.var_left;
   const idx_t right_var_idx = instr.data.in.var_right;
-
+//ilyushin
+    	printf("in");
+  	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
   ECMA_TRY_CATCH (left_value, get_variable_value (frame_ctx_p, left_var_idx, false), ret_value);
