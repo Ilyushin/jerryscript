@@ -32,7 +32,9 @@ opfunc_is_true_jmp_down (vm_instr_t instr, /**< instruction */
                                                                         instr.data.is_true_jmp_down.oc_idx_2);
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
-
+//ilyushin
+    	printf("is_true_jmp_down\n");
+  	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
   ecma_completion_value_t to_bool_completion = ecma_op_to_boolean (cond_value);
@@ -65,7 +67,9 @@ opfunc_is_true_jmp_up (vm_instr_t instr, /**< instruction */
                                                                         instr.data.is_true_jmp_up.oc_idx_2);
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
-
+//ilyushin
+    	printf("is_true_jmp_up\n");
+  	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
   ecma_completion_value_t to_bool_completion = ecma_op_to_boolean (cond_value);
@@ -104,7 +108,9 @@ opfunc_is_false_jmp_down (vm_instr_t instr, /**< instruction */
                                                                         instr.data.is_false_jmp_down.oc_idx_2);
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
-
+//ilyushin
+    	printf("is_false_jmp_down\n");
+  	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
   ecma_completion_value_t to_bool_completion = ecma_op_to_boolean (cond_value);
@@ -137,7 +143,9 @@ opfunc_is_false_jmp_up (vm_instr_t instr, /**< instruction */
                                                                         instr.data.is_false_jmp_up.oc_idx_2);
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
-
+//ilyushin
+    	printf("is_false_jmp_up\n");
+  	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
   ecma_completion_value_t to_bool_completion = ecma_op_to_boolean (cond_value);
@@ -172,9 +180,12 @@ opfunc_jmp_down (vm_instr_t instr, /**< instruction */
 {
   const vm_instr_counter_t offset = vm_calc_instr_counter_from_idx_idx (instr.data.jmp_down.oc_idx_1,
                                                                         instr.data.jmp_down.oc_idx_2);
+//ilyushin
+    	printf("jmp_down\n");
+  	//ilyushin 
 
   JERRY_ASSERT (((uint32_t) frame_ctx_p->pos + offset < MAX_OPCODES));
-
+ 
   frame_ctx_p->pos = (vm_instr_counter_t) (frame_ctx_p->pos + offset);
 
   return ecma_make_empty_completion_value ();
@@ -192,7 +203,11 @@ opfunc_jmp_up (vm_instr_t instr, /**< instruction */
 {
   const vm_instr_counter_t offset = vm_calc_instr_counter_from_idx_idx (instr.data.jmp_up.oc_idx_1,
                                                                         instr.data.jmp_up.oc_idx_2);
-  JERRY_ASSERT ((uint32_t) frame_ctx_p->pos >= offset);
+  
+//ilyushin
+    	printf("jmp_up\n");
+  	//ilyushin 
+JERRY_ASSERT ((uint32_t) frame_ctx_p->pos >= offset);
 
   frame_ctx_p->pos = (vm_instr_counter_t) (frame_ctx_p->pos - offset);
 
@@ -212,6 +227,9 @@ opfunc_jmp_break_continue (vm_instr_t instr, /**< instruction */
   vm_instr_counter_t target = frame_ctx_p->pos;
   target = (vm_instr_counter_t) (target + vm_calc_instr_counter_from_idx_idx (instr.data.jmp_down.oc_idx_1,
                                                                               instr.data.jmp_down.oc_idx_2));
+//ilyushin
+    	printf("jmp_break_continue\n");
+  	//ilyushin 
 
   return ecma_make_jump_completion_value (target);
 } /* opfunc_jmp_break_continue */
