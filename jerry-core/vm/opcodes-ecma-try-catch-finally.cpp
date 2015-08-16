@@ -34,7 +34,9 @@ opfunc_try_block (vm_instr_t instr, /**< instruction */
   const idx_t block_end_oc_idx_2 = instr.data.try_block.oc_idx_2;
   const vm_instr_counter_t try_end_oc = (vm_instr_counter_t) (
     vm_calc_instr_counter_from_idx_idx (block_end_oc_idx_1, block_end_oc_idx_2) + frame_ctx_p->pos);
-
+//ilyushin
+    	printf("try_block");
+  	//ilyushin
   frame_ctx_p->pos++;
 
   vm_run_scope_t run_scope_try = { frame_ctx_p->pos, try_end_oc };
