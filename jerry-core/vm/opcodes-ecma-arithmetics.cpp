@@ -110,7 +110,7 @@ opfunc_addition (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.addition.var_left;
   const idx_t right_var_idx = instr.data.addition.var_right;
 //ilyushin
-    	printf("addition\n");
+    	printf("addition,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -178,7 +178,7 @@ opfunc_substraction (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.substraction.var_left;
   const idx_t right_var_idx = instr.data.substraction.var_right;
 //ilyushin
-    	printf("substraction\n");
+    	printf("substraction,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -215,7 +215,7 @@ opfunc_multiplication (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.multiplication.var_left;
   const idx_t right_var_idx = instr.data.multiplication.var_right;
 //ilyushin
-    	printf("multiplication\n");
+    	printf("multiplication,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -252,7 +252,7 @@ opfunc_division (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.division.var_left;
   const idx_t right_var_idx = instr.data.division.var_right;
 //ilyushin
-    	printf("division\n");
+    	printf("division,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -289,7 +289,7 @@ opfunc_remainder (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.remainder.var_left;
   const idx_t right_var_idx = instr.data.remainder.var_right;
 //ilyushin
-    	printf("remainder\n");
+    	printf("remainder,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -325,7 +325,7 @@ opfunc_unary_plus (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.remainder.dst;
   const idx_t var_idx = instr.data.remainder.var_left;
 //ilyushin
-    	printf("unary_plus\n");
+    	printf("unary_plus,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -364,7 +364,7 @@ opfunc_unary_minus (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.remainder.dst;
   const idx_t var_idx = instr.data.remainder.var_left;
 //ilyushin
-    	printf("unary_minus\n");
+    	printf("unary_minus,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 

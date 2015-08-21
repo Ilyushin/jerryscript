@@ -32,7 +32,7 @@ opfunc_equal_value (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.equal_value.var_left;
   const idx_t right_var_idx = instr.data.equal_value.var_right;
 //ilyushin
-    	printf("equal_value");
+    	printf("equal_value,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -73,7 +73,7 @@ opfunc_not_equal_value (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.not_equal_value.var_left;
   const idx_t right_var_idx = instr.data.not_equal_value.var_right;
 //ilyushin
-    	printf("not_equal_value");
+    	printf("not_equal_value,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -116,7 +116,7 @@ opfunc_equal_value_type (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.equal_value_type.var_left;
   const idx_t right_var_idx = instr.data.equal_value_type.var_right;
 //ilyushin
-    	printf("equal_value_type");
+    	printf("equal_value_type,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -153,7 +153,7 @@ opfunc_not_equal_value_type (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.not_equal_value_type.var_left;
   const idx_t right_var_idx = instr.data.not_equal_value_type.var_right;
 //ilyushin
-    	printf("not_equal_value_type");
+    	printf("not_equal_value_type,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 

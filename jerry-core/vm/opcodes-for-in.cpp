@@ -192,7 +192,7 @@ opfunc_for_in (vm_instr_t instr, /**< instruction */
     vm_calc_instr_counter_from_idx_idx (block_end_oc_idx_1,
                                         block_end_oc_idx_2) + int_data_p->pos);
 //ilyushin
-    	printf("for_in");
+    	printf("for_in,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 

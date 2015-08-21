@@ -66,7 +66,7 @@ opfunc_assignment (vm_instr_t instr, /**< instruction */
   const opcode_arg_type_operand type_value_right = (opcode_arg_type_operand) instr.data.assignment.type_value_right;
   const idx_t src_val_descr = instr.data.assignment.value_right;
 //ilyushin
-    	printf("assignment\n");
+    	printf("assignment,");
   	//ilyushin 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -238,7 +238,7 @@ opfunc_pre_incr (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.pre_incr.dst;
   const idx_t incr_var_idx = instr.data.pre_incr.var_right;
 //ilyushin
-    	printf("pre_incr\n");
+    	printf("pre_incr,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -287,7 +287,7 @@ opfunc_pre_decr (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.pre_decr.dst;
   const idx_t decr_var_idx = instr.data.pre_decr.var_right;
 //ilyushin
-    	printf("pre_decr\n");
+    	printf("pre_decr,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -336,7 +336,7 @@ opfunc_post_incr (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.post_incr.dst;
   const idx_t incr_var_idx = instr.data.post_incr.var_right;
 //ilyushin
-    	printf("post_incr\n");
+    	printf("post_incr,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -386,7 +386,7 @@ opfunc_post_decr (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.post_decr.dst;
   const idx_t decr_var_idx = instr.data.post_decr.var_right;
 //ilyushin
-    	printf("post_decr\n");
+    	printf("post_decr,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -431,7 +431,7 @@ opfunc_reg_var_decl (vm_instr_t instr __attr_unused___, /**< instruction */
                      vm_frame_ctx_t *frame_ctx_p __attr_unused___) /**< interpreter context */
 {
 //ilyushin
-    	printf("reg_var_decl\n");
+    	printf("reg_var_decl,");
   	//ilyushin
   JERRY_UNREACHABLE ();
 } /* opfunc_reg_var_decl */
@@ -453,7 +453,7 @@ opfunc_var_decl (vm_instr_t instr, /**< instruction */
                                                             frame_ctx_p->instrs_p,
                                                             frame_ctx_p->pos);
 //ilyushin
-    	printf("var_decl\n");
+    	printf("var_decl,");
   	//ilyushin  
 JERRY_ASSERT (lit_cp.packed_value != MEM_CP_NULL);
 
@@ -549,7 +549,7 @@ opfunc_func_decl_n (vm_instr_t instr, /**< instruction */
   const idx_t function_name_idx = instr.data.func_decl_n.name_lit_idx;
   const ecma_length_t params_number = instr.data.func_decl_n.arg_list;
 //ilyushin
-    	printf("func_decl_n\n");
+    	printf("func_decl_n,");
   	//ilyushin
   lit_cpointer_t function_name_lit_cp = serializer_get_literal_cp_by_uid (function_name_idx,
                                                                           frame_ctx_p->instrs_p,
@@ -582,7 +582,7 @@ opfunc_func_expr_n (vm_instr_t instr, /**< instruction */
 {
   const vm_instr_counter_t lit_oc = frame_ctx_p->pos;
 //ilyushin
-    	printf("func_expr_n\n");
+    	printf("func_expr_n,");
   	//ilyushin
   frame_ctx_p->pos++;
 
@@ -798,7 +798,7 @@ opfunc_call_n (vm_instr_t instr, /**< instruction */
   const idx_t args_number_idx = instr.data.call_n.arg_list;
   const vm_instr_counter_t lit_oc = frame_ctx_p->pos;
 //ilyushin
-    	printf("call_n\n");
+    	printf("call_n,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -893,7 +893,7 @@ opfunc_construct_n (vm_instr_t instr, /**< instruction */
   const idx_t args_number = instr.data.construct_n.arg_list;
   const vm_instr_counter_t lit_oc = frame_ctx_p->pos;
 //ilyushin
-    	printf("construct_n\n");
+    	printf("construct_n,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -964,7 +964,7 @@ opfunc_array_decl (vm_instr_t instr, /**< instruction */
   const idx_t args_number_low_byte = instr.data.array_decl.list_2;
   const vm_instr_counter_t lit_oc = frame_ctx_p->pos;
 //ilyushin
-    	printf("array_decl\n");
+    	printf("array_decl,");
   	//ilyushin
   frame_ctx_p->pos++;
 
@@ -1042,7 +1042,7 @@ opfunc_obj_decl (vm_instr_t instr, /**< instruction */
 
   frame_ctx_p->pos++;
 //ilyushin
-    	printf("obj_decl\n");
+    	printf("obj_decl,");
   	//ilyushin
   ecma_length_t args_number = (((ecma_length_t) args_number_high_byte << JERRY_BITSINBYTE)
                                + (ecma_length_t) args_number_low_byte);
@@ -1198,7 +1198,7 @@ opfunc_ret (vm_instr_t instr __attr_unused___, /**< instruction */
             vm_frame_ctx_t *frame_ctx_p __attr_unused___) /**< interpreter context */
 {
 //ilyushin
-    	printf("ret\n");
+    	printf("ret,");
   	//ilyushin
   return ecma_make_return_completion_value (ecma_make_simple_value (ECMA_SIMPLE_VALUE_UNDEFINED));
 } /* opfunc_ret */
@@ -1218,7 +1218,7 @@ opfunc_retval (vm_instr_t instr __attr_unused___, /**< instruction */
 {
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 //ilyushin
-    	printf("retval\n");
+    	printf("retval,");
   	//ilyushin
   ECMA_TRY_CATCH (expr_val, get_variable_value (frame_ctx_p, instr.data.retval.ret_value, false), ret_value);
 
@@ -1246,7 +1246,7 @@ opfunc_prop_getter (vm_instr_t instr __attr_unused___, /**< instruction */
   const idx_t base_var_idx = instr.data.prop_getter.obj;
   const idx_t prop_name_var_idx = instr.data.prop_getter.prop;
 //ilyushin
-    	printf("prop_getter\n");
+    	printf("prop_getter,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1301,7 +1301,7 @@ opfunc_prop_setter (vm_instr_t instr __attr_unused___, /**< instruction */
   const idx_t prop_name_var_idx = instr.data.prop_setter.prop;
   const idx_t rhs_var_idx = instr.data.prop_setter.rhs;
 //ilyushin
-    	printf("prop_setter\n");
+    	printf("prop_setter,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1354,7 +1354,7 @@ opfunc_logical_not (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.logical_not.dst;
   const idx_t right_var_idx = instr.data.logical_not.var_right;
 //ilyushin
-    	printf("logical_not\n");
+    	printf("logical_not,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1394,7 +1394,7 @@ opfunc_this_binding (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.this_binding.lhs;
   const vm_instr_counter_t lit_oc = frame_ctx_p->pos;
 //ilyushin
-    	printf("this_binding\n");
+    	printf("this_binding,");
   	//ilyushin
   frame_ctx_p->pos++;
 
@@ -1425,7 +1425,7 @@ opfunc_with (vm_instr_t instr, /**< instruction */
   const vm_instr_counter_t with_end_oc = (vm_instr_counter_t) (
     vm_calc_instr_counter_from_idx_idx (block_end_oc_idx_1, block_end_oc_idx_2) + frame_ctx_p->pos);
 //ilyushin
-    	printf("with\n");
+    	printf("with,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1497,7 +1497,7 @@ opfunc_throw_value (vm_instr_t instr, /**< instruction */
 {
   const idx_t var_idx = instr.data.throw_value.var;
 //ilyushin
-    	printf("throw_value\n");
+    	printf("throw_value,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1579,7 +1579,7 @@ opfunc_typeof (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.typeof.lhs;
   const idx_t obj_var_idx = instr.data.typeof.obj;
 //ilyushin
-    	printf("typeof\n");
+    	printf("typeof,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1654,7 +1654,7 @@ opfunc_delete_var (vm_instr_t instr, /**< instruction */
   const idx_t name_lit_idx = instr.data.delete_var.name;
   const vm_instr_counter_t lit_oc = frame_ctx_p->pos;
 //ilyushin
-    	printf("delete_var\n");
+    	printf("delete_var,");
   	//ilyushin
   frame_ctx_p->pos++;
 
@@ -1723,7 +1723,7 @@ opfunc_delete_prop (vm_instr_t instr, /**< instruction */
   const idx_t base_var_idx = instr.data.delete_prop.base;
   const idx_t name_var_idx = instr.data.delete_prop.name;
 //ilyushin
-    	printf("delete_prop\n");
+    	printf("delete_prop,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -1794,7 +1794,7 @@ opfunc_meta (vm_instr_t instr, /**< instruction */
 {
   const opcode_meta_type type = (opcode_meta_type) instr.data.meta.type;
 //ilyushin
-    	printf("meta\n");
+    	printf("meta,");
   	//ilyushin
   switch (type)
   {

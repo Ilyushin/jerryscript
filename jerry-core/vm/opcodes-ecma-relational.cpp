@@ -32,7 +32,7 @@ opfunc_less_than (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.less_than.var_left;
   const idx_t right_var_idx = instr.data.less_than.var_right;
 //ilyushin
-    	printf("less_than");
+    	printf("less_than,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -82,7 +82,7 @@ opfunc_greater_than (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.greater_than.var_left;
   const idx_t right_var_idx = instr.data.greater_than.var_right;
 //ilyushin
-    	printf("greater_than");
+    	printf("greater_than,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -132,7 +132,7 @@ opfunc_less_or_equal_than (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.less_or_equal_than.var_left;
   const idx_t right_var_idx = instr.data.less_or_equal_than.var_right;
 //ilyushin
-    	printf("less_or_equal_than");
+    	printf("less_or_equal_than,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -189,7 +189,7 @@ opfunc_greater_or_equal_than (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.greater_or_equal_than.var_left;
   const idx_t right_var_idx = instr.data.greater_or_equal_than.var_right;
 //ilyushin
-    	printf("greater_or_equal_than");
+    	printf("greater_or_equal_than,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -246,7 +246,7 @@ opfunc_instanceof (vm_instr_t instr __attr_unused___, /**< instruction */
   const idx_t left_var_idx = instr.data.instanceof.var_left;
   const idx_t right_var_idx = instr.data.instanceof.var_right;
 //ilyushin
-    	printf("instanceof");
+    	printf("instanceof,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -294,7 +294,7 @@ opfunc_in (vm_instr_t instr __attr_unused___, /**< instruction */
   const idx_t left_var_idx = instr.data.in.var_left;
   const idx_t right_var_idx = instr.data.in.var_right;
 //ilyushin
-    	printf("in");
+    	printf("in,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 

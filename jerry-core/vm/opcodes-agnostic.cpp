@@ -33,7 +33,7 @@ opfunc_is_true_jmp_down (vm_instr_t instr, /**< instruction */
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 //ilyushin
-    	printf("is_true_jmp_down\n");
+    	printf("is_true_jmp_down,");
   	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
@@ -68,7 +68,7 @@ opfunc_is_true_jmp_up (vm_instr_t instr, /**< instruction */
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 //ilyushin
-    	printf("is_true_jmp_up\n");
+    	printf("is_true_jmp_up,");
   	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
@@ -109,7 +109,7 @@ opfunc_is_false_jmp_down (vm_instr_t instr, /**< instruction */
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 //ilyushin
-    	printf("is_false_jmp_down\n");
+    	printf("is_false_jmp_down,");
   	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
@@ -144,7 +144,7 @@ opfunc_is_false_jmp_up (vm_instr_t instr, /**< instruction */
 
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 //ilyushin
-    	printf("is_false_jmp_up\n");
+    	printf("is_false_jmp_up,");
   	//ilyushin  
   ECMA_TRY_CATCH (cond_value, get_variable_value (frame_ctx_p, cond_var_idx, false), ret_value);
 
@@ -181,7 +181,7 @@ opfunc_jmp_down (vm_instr_t instr, /**< instruction */
   const vm_instr_counter_t offset = vm_calc_instr_counter_from_idx_idx (instr.data.jmp_down.oc_idx_1,
                                                                         instr.data.jmp_down.oc_idx_2);
 //ilyushin
-    	printf("jmp_down\n");
+    	printf("jmp_down,");
   	//ilyushin 
 
   JERRY_ASSERT (((uint32_t) frame_ctx_p->pos + offset < MAX_OPCODES));
@@ -205,7 +205,7 @@ opfunc_jmp_up (vm_instr_t instr, /**< instruction */
                                                                         instr.data.jmp_up.oc_idx_2);
   
 //ilyushin
-    	printf("jmp_up\n");
+    	printf("jmp_up,");
   	//ilyushin 
 JERRY_ASSERT ((uint32_t) frame_ctx_p->pos >= offset);
 
@@ -228,7 +228,7 @@ opfunc_jmp_break_continue (vm_instr_t instr, /**< instruction */
   target = (vm_instr_counter_t) (target + vm_calc_instr_counter_from_idx_idx (instr.data.jmp_down.oc_idx_1,
                                                                               instr.data.jmp_down.oc_idx_2));
 //ilyushin
-    	printf("jmp_break_continue\n");
+    	printf("jmp_break_continue,");
   	//ilyushin 
 
   return ecma_make_jump_completion_value (target);

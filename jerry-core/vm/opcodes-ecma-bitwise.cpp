@@ -126,7 +126,7 @@ opfunc_b_and (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.b_and.var_left;
   const idx_t right_var_idx = instr.data.b_and.var_right;
 //ilyushin
-    	printf("b_and\n");
+    	printf("b_and,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -163,7 +163,7 @@ opfunc_b_or (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.b_or.var_left;
   const idx_t right_var_idx = instr.data.b_or.var_right;
 //ilyushin
-    	printf("b_or\n");
+    	printf("b_or,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -200,7 +200,7 @@ opfunc_b_xor (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.b_xor.var_left;
   const idx_t right_var_idx = instr.data.b_xor.var_right;
 //ilyushin
-    	printf("b_xor\n");
+    	printf("b_xor,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -237,7 +237,7 @@ opfunc_b_shift_left (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.b_shift_left.var_left;
   const idx_t right_var_idx = instr.data.b_shift_left.var_right;
 //ilyushin
-    	printf("b_shift_left\n");
+    	printf("b_shift_left,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -274,7 +274,7 @@ opfunc_b_shift_right (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.b_shift_right.var_left;
   const idx_t right_var_idx = instr.data.b_shift_right.var_right;
 //ilyushin
-    	printf("b_shift_right\n");
+    	printf("b_shift_right,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -311,7 +311,7 @@ opfunc_b_shift_uright (vm_instr_t instr, /**< instruction */
   const idx_t left_var_idx = instr.data.b_shift_uright.var_left;
   const idx_t right_var_idx = instr.data.b_shift_uright.var_right;
 //ilyushin
-    	printf("b_shift_uright");
+    	printf("b_shift_uright,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
@@ -347,7 +347,7 @@ opfunc_b_not (vm_instr_t instr, /**< instruction */
   const idx_t dst_var_idx = instr.data.b_not.dst;
   const idx_t right_var_idx = instr.data.b_not.var_right;
 //ilyushin
-    	printf("b_not");
+    	printf("b_not,");
   	//ilyushin
   ecma_completion_value_t ret_value = ecma_make_empty_completion_value ();
 
